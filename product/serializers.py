@@ -21,6 +21,7 @@ class ProductSerializer(serializers.ModelSerializer):
                   'min_price',
                   'max_price',
                   'rating',
+                  'description',
                   'min_quantity',
                   'max_quantity',
                   'created_at')
