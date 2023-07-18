@@ -48,11 +48,13 @@ from .serializers import ProductSerializer
 
 class ProductListDetail(generics.ListAPIView):
 
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
     filter_backends = (filters.DjangoFilterBackend,SearchFilter,OrderingFilter)
+
     filterset_class = ProductFilter
     ordering_fields = ['rating']
     search_fields = ['description']
