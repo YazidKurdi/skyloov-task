@@ -1,13 +1,10 @@
-from rest_framework import serializers
-
 from .models import Product
-
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-class ProductSerializer(serializers.ModelSerializer):
 
+class ProductSerializer(serializers.ModelSerializer):
     min_price = serializers.DecimalField(max_digits=10, decimal_places=2)
     max_price = serializers.DecimalField(max_digits=10, decimal_places=2)
     min_quantity = serializers.IntegerField()
@@ -15,16 +12,18 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('name',
-                  'category',
-                  'brand',
-                  'min_price',
-                  'max_price',
-                  'rating',
-                  'description',
-                  'min_quantity',
-                  'max_quantity',
-                  'created_at')
+        fields = (
+            'id',
+            'name',
+            'category',
+            'brand',
+            'min_price',
+            'max_price',
+            'rating',
+            'description',
+            'min_quantity',
+            'max_quantity',
+            'created_at')
 
     def validate(self, data):
         if 'min_price' in data and 'max_price' in data:
