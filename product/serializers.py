@@ -5,10 +5,6 @@ from rest_framework.exceptions import ValidationError
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    min_price = serializers.DecimalField(max_digits=10, decimal_places=2)
-    max_price = serializers.DecimalField(max_digits=10, decimal_places=2)
-    min_quantity = serializers.IntegerField()
-    max_quantity = serializers.IntegerField()
 
     class Meta:
         model = Product
