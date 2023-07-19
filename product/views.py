@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django_filters import rest_framework as filters
 
+from . import SearchPagination
 from .filters import ProductFilter
 from .models import Product
 from .serializers import ProductSerializer
@@ -48,8 +49,8 @@ from .serializers import ProductSerializer
 
 class ProductListDetail(generics.ListAPIView):
 
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
 
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -58,3 +59,5 @@ class ProductListDetail(generics.ListAPIView):
     filterset_class = ProductFilter
     ordering_fields = ['rating']
     search_fields = ['description']
+
+    pagination_class = SearchPagination
