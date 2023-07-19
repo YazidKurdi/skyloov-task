@@ -1,3 +1,4 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.response import Response
@@ -47,10 +48,11 @@ from .serializers import ProductSerializer
 #         serializer = ProductSerializer(ordered_queryset, many=True)
 #         return Response(serializer.data)
 
-class ProductListDetail(generics.ListAPIView):
 
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
+class ProductList(generics.ListAPIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -61,3 +63,17 @@ class ProductListDetail(generics.ListAPIView):
     search_fields = ['description']
 
     pagination_class = SearchPagination
+
+    @swagger_auto_schema(
+        operation_summary="Retrieve a list of products",
+        operation_description="This endpoint retrieves a list of products with optional filtering, ordering, and search capabilities.",
+        responses={200: ProductSerializer(many=True),
+                   400: 'Bad request',
+                   500: 'Internal server error'},
+        tags=["Product"],
+    )
+    def get(self, request, *args, **kwargs):
+        """
+        Get a list of products
+        """
+        return super().get(request, *args, **kwargs)
