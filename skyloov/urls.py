@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/product/', include('product.urls')),
     path('api/cart/',include('cart.urls')),
+    path('', include('account.urls')),
     path('login/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('login/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
