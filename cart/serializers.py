@@ -1,17 +1,13 @@
 from rest_framework import serializers
 
+from product.models import Product
 from product.serializers import ProductSerializer
 from .models import Cart, CartItem
-
-
-from rest_framework import serializers
-from .models import Cart, CartItem
-from product.serializers import ProductSerializer
 
 class CartItemSerializer(serializers.ModelSerializer):
     sub_total = serializers.SerializerMethodField()
     quantity = serializers.ReadOnlyField()
-    product = ProductSerializer()
+    product = ProductSerializer(read_only=True)
 
     class Meta:
         model = CartItem
@@ -34,3 +30,37 @@ class CartSerializer(serializers.ModelSerializer):
 
     def get_cart_total(self, obj):
         return obj.cart_total
+
+class DeleteCartItemSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    class Meta:
+        model = Product
+        ref_name = None
+        fields = ('id',)
+
+
+class UpdateCartItemSerializer(serializers.ModelSerializer):
+
+    id = serializers.IntegerField()
+    quantity = serializers.IntegerField()
+
+    class Meta:
+        model = CartItem
+        ref_name = None
+        fields = ('id', 'quantity')
+
+    def validate_quantity(self, value):
+        if value < 0:
+            raise serializers.ValidationError("Quantity must be greater than or equal to 0.")
+        return value
+
+    def update(self, instance, validated_data):
+        quantity = validated_data.get('quantity')
+
+        if not quantity:
+            instance.delete()
+        else:
+            instance.quantity = quantity
+            instance.save()
+
+        return instance
