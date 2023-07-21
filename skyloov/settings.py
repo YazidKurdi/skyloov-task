@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^prszngdix$+iq(sg1=^6r&+pelf8^)d$%9^v9vx0*dc$_hps!'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -117,11 +117,11 @@ SIMPLE_JWT = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'skyloov',
-        'USER': 'root',
-        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
-        'HOST': 'localhost',  # Or the hostname where your MySQL server is running
-        'PORT': '3306',  # Or the port number MySQL server is listening on
+        'NAME': os.environ.get('MYSQL_NAME', 'your_database_name'),
+        'USER': os.environ.get('MYSQL_USER', 'your_mysql_username'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'your_mysql_password'),
+        'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
+        'PORT': '3306',
     }
 }
 
@@ -171,11 +171,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CELERY_BROKER_URL = 'redis://localhost:6379'
+# CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL','redis://redis:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BACKEND_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 # CELERY_BEAT_SCHEDULE = {

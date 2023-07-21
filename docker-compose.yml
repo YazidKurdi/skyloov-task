@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    restart: on-failure
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      MYSQL_HOST: db
+      MYSQL_NAME: your_database_name
+      MYSQL_USER: your_mysql_username
+      MYSQL_PASSWORD: your_mysql_password
+      CELERY_BROKER: redis://redis:6379/0
+      CELERY_BACKEND: redis://redis:6379/0
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: your_mysql_root_password
+      MYSQL_DATABASE: your_database_name
+      MYSQL_USER: your_mysql_username
+      MYSQL_PASSWORD: your_mysql_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: "redis:alpine"
+
+  celery:
+    build: .
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      CELERY_BROKER: redis://redis:6379/0
+      CELERY_BACKEND: redis://redis:6379/0
+    command: celery -A skyloov worker -l INFO
+    depends_on:
+      - web
+      - redis
+
+volumes:
+  mysql_data:
