@@ -15,8 +15,6 @@ services:
       CELERY_BACKEND: redis://redis:6379/0
     ports:
       - 8000:8000
-    volumes:
-      - .:/app
     depends_on:
       - db
       - redis
@@ -37,11 +35,10 @@ services:
   celery:
     build: .
     environment:
+      SECRET_KEY: ${SECRET_KEY}
       CELERY_BROKER: redis://redis:6379/0
       CELERY_BACKEND: redis://redis:6379/0
     command: celery -A skyloov worker -l INFO
-    volumes:
-      - .:/app
     depends_on:
       - web
       - redis
