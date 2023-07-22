@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+
 class UserSerializer(serializers.ModelSerializer):
 
     email = serializers.EmailField(required=True)
@@ -16,4 +17,3 @@ class UserSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("This email is already registered.")
         return value
-

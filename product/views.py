@@ -8,6 +8,7 @@ from .filters import ProductFilter
 from .models import Product
 from .serializers import ProductSerializer
 
+
 class ProductList(generics.ListCreateAPIView):
     authentication_classes = []
     permission_classes = []

@@ -17,11 +17,11 @@ from cart.serializers import (
 from cart.utils import product_in_cart
 from product.models import Product
 
+
 class AddProductCart(APIView):
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-
 
     @swagger_auto_schema(
         operation_summary='Add product to cart',
@@ -45,7 +45,6 @@ class AddProductCart(APIView):
             quantity = request.data.get('quantity', 1)
             if not isinstance(quantity, int):
                 raise ValidationError('Quantity must be a number.')
-
 
             if not product_in_cart(cart, product):
                 # Create the cart item
@@ -79,11 +78,11 @@ class DeleteProductCart(APIView):
 
         product_id = serializer.validated_data.get('product_id')
         product = get_object_or_404(Product, id=product_id)
-        cart = get_object_or_404(Cart,owner=request.user)
+        cart = get_object_or_404(Cart, owner=request.user)
 
         if product_in_cart(cart, product):
-            cartitem = CartItem.objects.get(product=product, cart=cart)
-            cartitem.delete()
+            cart_item = CartItem.objects.get(product=product, cart=cart)
+            cart_item.delete()
 
             return Response({'message': 'Product removed from cart successfully'}, status=status.HTTP_204_NO_CONTENT)
 
@@ -122,7 +121,6 @@ class UpdateCartItem(APIView):
         return Response({'message': 'CartItem not found in Cart'}, status=status.HTTP_404_NOT_FOUND)
 
 
-
 class RetrieveCart(APIView):
 
     authentication_classes = [JWTAuthentication]
@@ -138,6 +136,6 @@ class RetrieveCart(APIView):
         tags=['Cart'],
     )
     def get(self, request):
-        cart = get_object_or_404(Cart,owner=request.user)
+        cart = get_object_or_404(Cart, owner=request.user)
         serializer = CartSerializer(cart)
         return Response(serializer.data)

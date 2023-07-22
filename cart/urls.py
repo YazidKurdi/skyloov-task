@@ -8,4 +8,3 @@ urlpatterns = [
     path('update-product/', views.UpdateCartItem.as_view(), name='update-product'),
     path('all-products/', views.RetrieveCart.as_view(), name='all-products'),
 ]
-

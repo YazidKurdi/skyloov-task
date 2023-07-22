@@ -4,6 +4,7 @@ from product.models import Product
 from product.serializers import ProductSerializer
 from .models import Cart, CartItem
 
+
 class CartItemSerializer(serializers.ModelSerializer):
     sub_total = serializers.SerializerMethodField()
     quantity = serializers.ReadOnlyField()
@@ -15,6 +16,7 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     def get_sub_total(self, obj):
         return obj.subTotal
+
 
 class CartSerializer(serializers.ModelSerializer):
     cart_items = CartItemSerializer(many=True)
@@ -31,8 +33,10 @@ class CartSerializer(serializers.ModelSerializer):
     def get_cart_total(self, obj):
         return obj.cart_total
 
+
 class DeleteCartItemSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
+
     class Meta:
         model = Product
         ref_name = None
