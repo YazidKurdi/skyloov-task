@@ -6,6 +6,8 @@ from rest_framework.exceptions import ValidationError
 
 class ProductSerializer(serializers.ModelSerializer):
 
+    created_at = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
         fields = (
@@ -20,6 +22,9 @@ class ProductSerializer(serializers.ModelSerializer):
             'min_quantity',
             'max_quantity',
             'created_at')
+
+    def get_created_at(self, instance):
+        return instance.created_at.strftime("%d-%m-%Y %H:%M:%S")
 
     def validate(self, data):
         if 'min_price' in data and 'max_price' in data:
