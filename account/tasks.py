@@ -6,6 +6,6 @@ def send_welcome_email_task(user_email):
 
     subject = 'Welcome to Skyloov'
     message = 'Thank you for joining Skyloov!'
-    from_email = 'yazid.kurdi@gmail.com'
+    from_email = 'skyloov.assignment@gmail.com'
     recipient_list = [user_email]
     send_mail(subject, message, from_email, recipient_list)
