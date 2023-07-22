@@ -84,7 +84,7 @@ WSGI_APPLICATION = 'skyloov.wsgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
 }
 
 # Swagger settings
@@ -194,6 +194,6 @@ EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'yazidkurdi@gmail.com'
+EMAIL_HOST_USER = 'skyloov.assignment@gmail.com'
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
-DEFAULT_FROM_EMAIL='Celery <yazidkurdi@gmail.com>'
+DEFAULT_FROM_EMAIL='Celery <skyloov.assignment@gmail.com>'
