@@ -9,19 +9,27 @@ class CartItemSerializer(serializers.ModelSerializer):
     sub_total = serializers.SerializerMethodField()
     quantity = serializers.ReadOnlyField()
     product = ProductSerializer(read_only=True)
+    created_at = serializers.SerializerMethodField()
+    updated_at = serializers.SerializerMethodField()
 
     class Meta:
         model = CartItem
-        fields = ('id', 'product', 'quantity', 'sub_total')
+        fields = ('id', 'product', 'quantity', 'sub_total','created_at','updated_at')
 
     def get_sub_total(self, obj):
         return obj.subTotal
 
+    def get_created_at(self, instance):
+        return instance.created_at.strftime("%d-%m-%Y %H:%M:%S")
+
+    def get_updated_at(self, instance):
+        return instance.created_at.strftime("%d-%m-%Y %H:%M:%S")
 
 class CartSerializer(serializers.ModelSerializer):
     cart_items = CartItemSerializer(many=True)
     num_of_items = serializers.SerializerMethodField()
     cart_total = serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
 
     class Meta:
         model = Cart
@@ -32,6 +40,9 @@ class CartSerializer(serializers.ModelSerializer):
 
     def get_cart_total(self, obj):
         return obj.cart_total
+
+    def get_created_at(self, instance):
+        return instance.created_at.strftime("%d-%m-%Y %H:%M:%S")
 
 
 class DeleteCartItemSerializer(serializers.ModelSerializer):
@@ -45,13 +56,13 @@ class DeleteCartItemSerializer(serializers.ModelSerializer):
 
 class UpdateCartItemSerializer(serializers.ModelSerializer):
 
-    id = serializers.IntegerField()
+    product_id = serializers.IntegerField()
     quantity = serializers.IntegerField()
 
     class Meta:
         model = CartItem
         ref_name = None
-        fields = ('id', 'quantity')
+        fields = ('product_id', 'quantity')
 
     def validate_quantity(self, value):
         if value < 0:
