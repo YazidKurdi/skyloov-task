@@ -13,6 +13,7 @@ services:
       MYSQL_PASSWORD: your_mysql_password
       CELERY_BROKER: redis://redis:6379/0
       CELERY_BACKEND: redis://redis:6379/0
+      APP_PASSWORD: nnvrkdrmxmuejnko
     ports:
       - 8000:8000
     depends_on:
@@ -38,6 +39,7 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       CELERY_BROKER: redis://redis:6379/0
       CELERY_BACKEND: redis://redis:6379/0
+      APP_PASSWORD: nnvrkdrmxmuejnko
     command: celery -A skyloov worker -l INFO
     depends_on:
       - web
