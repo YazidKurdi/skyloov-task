@@ -2,6 +2,8 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics
 from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters import rest_framework as filters
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from . import SearchPagination
 from .filters import ProductFilter
@@ -9,8 +11,9 @@ from .models import Product
 from .serializers import ProductSerializer
 
 
-class ProductList(generics.ListCreateAPIView):
-    authentication_classes = []
+class ProductListCreate(generics.ListCreateAPIView):
+
+    authentication_classes = [JWTAuthentication]
     permission_classes = []
 
     queryset = Product.objects.all()
@@ -20,6 +23,13 @@ class ProductList(generics.ListCreateAPIView):
     ordering_fields = ['rating']
     search_fields = ['description']
     pagination_class = SearchPagination
+
+    def get_permissions(self):
+        # Check if the request method is POST, and apply IsAuthenticated permission only for POST requests
+        if self.request.method != 'GET':
+            return [IsAuthenticated()]
+        else:
+            return []
 
     @swagger_auto_schema(
         operation_summary="Retrieve a list of products",
