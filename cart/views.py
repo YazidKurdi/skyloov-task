@@ -8,19 +8,19 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 
 from cart.models import Cart, CartItem
+from cart.permissions import IsOwnerOrReadOnly
 from cart.serializers import (
     CartSerializer,
     DeleteCartItemSerializer,
     UpdateCartItemSerializer,
 )
-from cart.utils import product_in_cart
 from product.models import Product
 
 
 class BaseCartAction(APIView):
 
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_product_cart(self, request):
         cart = get_object_or_404(Cart, owner=request.user)
@@ -31,8 +31,12 @@ class BaseCartAction(APIView):
         product = get_object_or_404(Product, id=product_id)
         return product
 
-    def get_cart_item(self, cart, product):
+    def get_cart_item(self,cart, product):
         return get_object_or_404(CartItem, product=product, cart=cart)
+
+    def product_in_cart(self, cart, product):
+        return CartItem.objects.filter(cart=cart, product=product)
+
 
 class AddProductCart(BaseCartAction):
 
@@ -56,7 +60,7 @@ class AddProductCart(BaseCartAction):
         product = self.get_product_from_cart(request)
         cart = self.get_product_cart(request)
 
-        if product_in_cart(cart, product):
+        if self.product_in_cart(cart, product):
             return Response({'message': 'Product already in cart'}, status=status.HTTP_400_BAD_REQUEST)
 
         quantity = serializer.validated_data.get('quantity', 1)
@@ -68,7 +72,7 @@ class AddProductCart(BaseCartAction):
 class DeleteCartItem(BaseCartAction):
 
     @swagger_auto_schema(
-        operation_description='Given and authenticated user and a product_id in request body,CartItem in Cart would be deleted.',
+        operation_description='Given and authenticated user, product_id in request body,CartItem in Cart would be deleted.',
         operation_summary='Delete CartItem from Cart',
         responses={
             204: 'Product removed from cart successfully',
@@ -87,7 +91,7 @@ class DeleteCartItem(BaseCartAction):
         product = self.get_product_from_cart(request)
         cart = self.get_product_cart(request)
 
-        if product_in_cart(cart, product):
+        if self.product_in_cart(cart, product):
             cart_item = self.get_cart_item(cart, product)
             cart_item.delete()
             return Response({'message': 'Product removed from cart successfully'}, status=status.HTTP_204_NO_CONTENT)
@@ -98,7 +102,7 @@ class DeleteCartItem(BaseCartAction):
 class UpdateCartItem(BaseCartAction):
 
     @swagger_auto_schema(
-        operation_description='Given an authenticated user, CartItem ID & Quantity in request body, CartItem quantity in Cart would be updated.',
+        operation_description='Given an authenticated user, product_id & quantity in request body, CartItem quantity in Cart would be updated.',
         operation_summary='Update CartItem quantity in Cart',
         responses={
             200: 'CartItem quantity updated successfully',
@@ -117,7 +121,7 @@ class UpdateCartItem(BaseCartAction):
         product = self.get_product_from_cart(request)
         cart = self.get_product_cart(request)
 
-        if product_in_cart(cart, product):
+        if self.product_in_cart(cart, product):
             cart_item = self.get_cart_item(cart, product)
             serializer.update(cart_item, serializer.validated_data)
             return Response({'message': 'CartItem quantity updated successfully'}, status=status.HTTP_200_OK)
