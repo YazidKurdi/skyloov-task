@@ -56,7 +56,7 @@ class AddProductCart(APIView):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class DeleteProductCart(APIView):
+class DeleteCartItem(APIView):
 
     @swagger_auto_schema(
         operation_description='Given authenticated user and product_id in request body,CartItem in Cart would be deleted.',
