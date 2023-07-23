@@ -46,12 +46,12 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 class DeleteCartItemSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
+    product_id = serializers.IntegerField()
 
     class Meta:
         model = Product
         ref_name = None
-        fields = ('id',)
+        fields = ('product_id',)
 
 
 class UpdateCartItemSerializer(serializers.ModelSerializer):
