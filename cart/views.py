@@ -22,7 +22,7 @@ class BaseCartAction(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsOwnerOrReadOnly]
 
-    def get_product_cart(self, request):
+    def get_cart(self, request):
         cart = get_object_or_404(Cart, owner=request.user)
         return cart
 
@@ -58,7 +58,10 @@ class AddProductCart(BaseCartAction):
             return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
         product = self.get_product_from_cart(request)
-        cart = self.get_product_cart(request)
+        try:
+            cart = self.get_cart(request)
+        except TypeError as e:
+            return Response({'error': str(e)}, status=status.HTTP_401_UNAUTHORIZED)
 
         if self.product_in_cart(cart, product):
             return Response({'message': 'Product already in cart'}, status=status.HTTP_400_BAD_REQUEST)
@@ -89,7 +92,7 @@ class DeleteCartItem(BaseCartAction):
             return Response({'error': str(serializer.errors)}, status=status.HTTP_400_BAD_REQUEST)
 
         product = self.get_product_from_cart(request)
-        cart = self.get_product_cart(request)
+        cart = self.get_cart(request)
 
         if self.product_in_cart(cart, product):
             cart_item = self.get_cart_item(cart, product)
@@ -119,7 +122,7 @@ class UpdateCartItem(BaseCartAction):
             return Response({'error': str(serializer.errors)}, status=status.HTTP_400_BAD_REQUEST)
 
         product = self.get_product_from_cart(request)
-        cart = self.get_product_cart(request)
+        cart = self.get_cart(request)
 
         if self.product_in_cart(cart, product):
             cart_item = self.get_cart_item(cart, product)
