@@ -38,6 +38,12 @@ class UserSignupView(generics.CreateAPIView):
 
 
 class UserActivateView(APIView):
+    @swagger_auto_schema(
+        operation_summary="Activate account by email confirmation link",
+        responses={200: 'Account activated',
+                   400: 'Bad request'},
+        tags=["Activate account"]
+    )
     def get(self, request, uid, token):
         try:
             uid = force_text(urlsafe_base64_decode(uid))
