@@ -39,7 +39,7 @@ services:
     build: .
     environment:
       SECRET_KEY: ${SECRET_KEY}
-      MYSQL_HOST: db  # Use the Docker service name as the MySQL host
+      MYSQL_HOST: db
       MYSQL_NAME: your_database_name
       MYSQL_USER: your_mysql_username
       MYSQL_PASSWORD: your_mysql_password
