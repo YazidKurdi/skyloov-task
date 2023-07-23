@@ -12,31 +12,36 @@ Clone the repository locally & cd into the directory
 git clone https://github.com/YazidKurdi/skyloov-task.git && cd skyloov-task
 ```
 
-#### Running the backend server (Locally), run the below commands in the main project directory using separate terminals for each command
+#### Running the backend server (Locally), run the below commands in the main project directory using separate terminals for python and celery
 
-1. Install requirements
+1. Create virtual environment and activate:
+```
+python -m venv venv && venv\Scripts\activate
+```
+
+2. Install requirements:
 ```
 pip install -r requirements.txt
 ```
 
-2. Django:
+3. Django:
 ```
 python manage.py runserver
 ```
     
-3. A) Celery Worker (Windows):
+4. A) Celery Worker (Windows):
 ```
 celery -A skyloov worker --pool=solo -l INFO
 
 ```
 
-3. B) Celery Worker (Linux):
+4. B) Celery Worker (Linux):
 ```
 celery -A skyloov worker -l INFO
 
 ```
 
-4. Visit  http://127.0.0.1:8000
+5. Visit  http://127.0.0.1:8000
 
 #### Running the backend server (Docker)
 
