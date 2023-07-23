@@ -60,6 +60,6 @@ docker-compose up
   paste in "Authorization" box
 - Multi threading image processing to various sizes
 
-## Unit Testing (Locally)
+## Unit Testing (Pytest)
 
 Run ```docker-compose exec web pytest``` while in the main project directory
