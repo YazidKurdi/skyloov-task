@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 User = get_user_model()
 
+
 class UserSerializer(serializers.ModelSerializer):
 
     email = serializers.EmailField(required=True)
@@ -15,13 +16,17 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate_email(self, value):
-        # Check if the email already exists in the database
+        """
+        Validate the uniqueness of the email address in the database.
+        """
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("This email is already registered.")
         return value
 
     def create(self, validated_data):
-        # Hash the password before saving the user object
+        """
+        Create a new user instance with hashed password.
+        """
         validated_data['password'] = make_password(validated_data['password'])
         user = User.objects.create(**validated_data)
         return user

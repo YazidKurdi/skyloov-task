@@ -11,7 +11,7 @@ schema_view = get_schema_view(
         title="Skyloov Backend API",
         default_version='v1',
         description="The documentation below contains three main endpoints (Cart, Product and Login),"
-                    " Cart endpoint's require user authentication while Product does not. \n\n"
+                    " Cart endpoint's and Product (POST request) require user authentication while Product(GET request) does not. \n\n"
                     "Login in through the 'Django Login' button and insert username and password,"
                     " an access token will be generated that can be used to access the endpoints that need authentication. \n\n",
     ),

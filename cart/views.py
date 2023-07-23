@@ -18,23 +18,38 @@ from product.models import Product
 
 
 class BaseCartAction(APIView):
+    """
+    Base class for common cart actions.
+    """
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsOwnerOrReadOnly]
 
     def get_cart(self, request):
+        """
+        Retrieve the cart for the authenticated user.
+        """
         cart = get_object_or_404(Cart, owner=request.user)
         return cart
 
     def get_product_from_cart(self, request):
+        """
+        Get a product object from the given product_id in the request data.
+        """
         product_id = request.data.get('product_id')
         product = get_object_or_404(Product, id=product_id)
         return product
 
     def get_cart_item(self,cart, product):
+        """
+        Get a cart item based on the given cart and product objects.
+        """
         return get_object_or_404(CartItem, product=product, cart=cart)
 
     def product_in_cart(self, cart, product):
+        """
+        Check if a product is already present in the cart.
+        """
         return CartItem.objects.filter(cart=cart, product=product)
 
 
@@ -52,6 +67,9 @@ class AddProductCart(BaseCartAction):
         tags=['Cart'],
     )
     def post(self, request):
+        """
+        Add a product to the cart as a CartItem.
+        """
         serializer = UpdateCartItemSerializer(data=request.data)
 
         if not serializer.is_valid():
@@ -86,6 +104,9 @@ class DeleteCartItem(BaseCartAction):
         tags=['Cart'],
     )
     def delete(self, request):
+        """
+        Delete a CartItem from the cart.
+        """
         serializer = DeleteCartItemSerializer(data=request.data)
 
         if not serializer.is_valid():
@@ -116,6 +137,9 @@ class UpdateCartItem(BaseCartAction):
         tags=['Cart'],
     )
     def put(self, request):
+        """
+        Update the quantity of a CartItem in the cart.
+        """
         serializer = UpdateCartItemSerializer(data=request.data)
 
         if not serializer.is_valid():
@@ -147,6 +171,9 @@ class RetrieveCart(APIView):
         tags=['Cart'],
     )
     def get(self, request):
+        """
+        Retrieve the cart and cart items for the authenticated user.
+        """
         cart = get_object_or_404(Cart, owner=request.user)
         serializer = CartSerializer(cart)
         return Response(serializer.data,status=status.HTTP_200_OK)

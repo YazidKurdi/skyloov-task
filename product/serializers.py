@@ -1,7 +1,7 @@
-from .models import Product
-
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+
+from .models import Product
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -24,9 +24,17 @@ class ProductSerializer(serializers.ModelSerializer):
             'created_at')
 
     def get_created_at(self, instance):
+        """
+        Get the formatted string representation of the product's creation date.
+        """
+
         return instance.created_at.strftime("%d-%m-%Y %H:%M:%S")
 
     def validate(self, data):
+        """
+        Validate the data for the Product serializer (min_price <= max_price) and (min_quantity <= max_quantity).
+        """
+
         if 'min_price' in data and 'max_price' in data:
             min_price = data['min_price']
             max_price = data['max_price']

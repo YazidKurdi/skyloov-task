@@ -16,18 +16,27 @@ class Cart(models.Model):
 
     @property
     def num_of_items(self):
+        """
+        Calculate and return the total number of items in the cart.
+        """
         cart_items = self.cart_items.all()
         qtysum = sum([qty.quantity for qty in cart_items])
         return qtysum
 
     @property
     def cart_total(self):
+        """
+        Calculate and return the total price of all items in the cart.
+        """
         cart_items = self.cart_items.all()
         qtysum = sum([qty.subTotal for qty in cart_items])
         return qtysum
 
     @receiver(post_save, sender=User)
     def create_cart(sender, instance, created, **kwargs):
+        """
+        Create a cart for the user upon user creation.
+        """
         if created:
             Cart.objects.create(owner=instance)
 
@@ -45,8 +54,10 @@ class CartItem(models.Model):
 
     @property
     def subTotal(self):
+        """
+        Calculate and return the subtotal for the cart item.
+        """
         total = self.quantity * self.product.min_price
-
         return total
 
     class Meta:

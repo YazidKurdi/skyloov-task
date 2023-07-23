@@ -39,7 +39,7 @@ docker-compose up
 - Activation email is sent to user to activate account enabling access to backend resources
 
 ### Misc
-- Documentation using Swagger (drf_yasg package) @ http://127.0.0.1:8000/swagger/
+- Documentation using Swagger (drf_yasg package) @ http://127.0.0.1:8000/swagger/ - Login to recieve access token and paste in "Authorization" box
 - Multi threading image processing to various sizes
 
 
