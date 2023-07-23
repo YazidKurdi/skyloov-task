@@ -27,8 +27,10 @@ services:
       MYSQL_DATABASE: your_database_name
       MYSQL_USER: your_mysql_username
       MYSQL_PASSWORD: your_mysql_password
+      command: --init-file /docker-entrypoint-initdb.d/init.sql
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   redis:
     image: "redis:alpine"

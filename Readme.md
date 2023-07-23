@@ -12,38 +12,7 @@ Clone the repository locally & cd into the directory
 git clone https://github.com/YazidKurdi/skyloov-task.git && cd skyloov-task
 ```
 
-#### Running the backend server (Locally), run the below commands in the main project directory using separate terminals for python and celery
-
-1. Create virtual environment and activate:
-```
-python -m venv venv && venv\Scripts\activate
-```
-
-2. Install requirements:
-```
-pip install -r requirements.txt
-```
-
-3. Django:
-```
-python manage.py runserver
-```
-    
-4. A) Celery Worker (Windows):
-```
-celery -A skyloov worker --pool=solo -l INFO
-
-```
-
-4. B) Celery Worker (Linux):
-```
-celery -A skyloov worker -l INFO
-
-```
-
-5. Visit  http://127.0.0.1:8000
-
-#### Running the backend server (Docker)
+#### Running the backend server (Docker), run the below commands in the main project directory using separate terminals for python and celery
 
 1. Pull the docker images and spin up the containers:
 ```
@@ -81,4 +50,4 @@ docker-compose up
 
 ## Unit Testing (Locally)
 
-Run ```pytest``` while in the main project directory
+Run ```docker-compose exec web pytest``` while in the main project directory
