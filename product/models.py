@@ -45,7 +45,6 @@ class Product(models.Model):
 
     def create_image_dimensions(self):
         # Open the uploaded image using PIL
-        sleep(10)
         img = Image.open(self.image.path)
 
         self.basename = os.path.basename(self.image.name)

@@ -5,5 +5,3 @@ class EmailerConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'account'
 
-    def ready(self):
-        import account.signals  # Register the signals
