@@ -10,7 +10,7 @@ User = get_user_model()
 
 class Cart(models.Model):
 
-    owner = models.OneToOneField(User, on_delete=models.CASCADE)
+    owner = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cart')
     created_at = models.DateTimeField(auto_now_add=True)
 
 
