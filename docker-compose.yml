@@ -6,7 +6,6 @@ services:
     restart: on-failure
     command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     environment:
-      SECRET_KEY: ${SECRET_KEY}
       MYSQL_HOST: db
       MYSQL_NAME: your_database_name
       MYSQL_USER: your_mysql_username
@@ -38,7 +37,6 @@ services:
   celery:
     build: .
     environment:
-      SECRET_KEY: ${SECRET_KEY}
       MYSQL_HOST: db
       MYSQL_NAME: your_database_name
       MYSQL_USER: your_mysql_username
