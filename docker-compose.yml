@@ -13,7 +13,7 @@ services:
       MYSQL_PASSWORD: your_mysql_password
       CELERY_BROKER: redis://redis:6379/0
       CELERY_BACKEND: redis://redis:6379/0
-      APP_PASSWORD: nnvrkdrmxmuejnko
+      EMAIL_PASSWORD: eaxcvxodvnmuksit
     ports:
       - 8000:8000
     depends_on:
@@ -39,9 +39,13 @@ services:
     build: .
     environment:
       SECRET_KEY: ${SECRET_KEY}
+      MYSQL_HOST: db  # Use the Docker service name as the MySQL host
+      MYSQL_NAME: your_database_name
+      MYSQL_USER: your_mysql_username
+      MYSQL_PASSWORD: your_mysql_password
       CELERY_BROKER: redis://redis:6379/0
       CELERY_BACKEND: redis://redis:6379/0
-      APP_PASSWORD: nnvrkdrmxmuejnko
+      EMAIL_PASSWORD: eaxcvxodvnmuksit
     command: celery -A skyloov worker -l INFO
     depends_on:
       - web
