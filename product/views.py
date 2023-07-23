@@ -26,7 +26,7 @@ class ProductListCreate(generics.ListCreateAPIView):
 
     def get_permissions(self):
         # Check if the request method is POST, and apply IsAuthenticated permission only for POST requests
-        if self.request.method != 'GET':
+        if self.request.method == 'POST':
             return [IsAuthenticated()]
         else:
             return []
