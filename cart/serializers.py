@@ -33,7 +33,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         """
         Return the formatted updated_at timestamp.
         """
-        return instance.created_at.strftime("%d-%m-%Y %H:%M:%S")
+        return instance.updated_at.strftime("%d-%m-%Y %H:%M:%S")
 
 
 class CartSerializer(serializers.ModelSerializer):
