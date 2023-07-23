@@ -6,6 +6,7 @@ from .models import Cart, CartItem
 
 
 class CartItemSerializer(serializers.ModelSerializer):
+
     sub_total = serializers.SerializerMethodField()
     quantity = serializers.ReadOnlyField()
     product = ProductSerializer(read_only=True)
@@ -14,16 +15,26 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartItem
-        fields = ('id', 'product', 'quantity', 'sub_total','created_at','updated_at')
+        fields = ('id', 'product', 'quantity', 'sub_total', 'created_at', 'updated_at')
 
     def get_sub_total(self, obj):
+        """
+        Calculate and return the subtotal for the CartItem.
+        """
         return obj.subTotal
 
     def get_created_at(self, instance):
+        """
+        Return the formatted created_at timestamp.
+        """
         return instance.created_at.strftime("%d-%m-%Y %H:%M:%S")
 
     def get_updated_at(self, instance):
+        """
+        Return the formatted updated_at timestamp.
+        """
         return instance.created_at.strftime("%d-%m-%Y %H:%M:%S")
+
 
 class CartSerializer(serializers.ModelSerializer):
     cart_items = CartItemSerializer(many=True)
@@ -36,12 +47,21 @@ class CartSerializer(serializers.ModelSerializer):
         fields = ('id', 'owner', 'created_at', 'num_of_items', 'cart_total', 'cart_items')
 
     def get_num_of_items(self, obj):
+        """
+        Return the number of items in the Cart.
+        """
         return obj.num_of_items
 
     def get_cart_total(self, obj):
+        """
+        Return the total price of the Cart.
+        """
         return obj.cart_total
 
     def get_created_at(self, instance):
+        """
+        Return the formatted created_at timestamp.
+        """
         return instance.created_at.strftime("%d-%m-%Y %H:%M:%S")
 
 
@@ -65,11 +85,17 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
         fields = ('product_id', 'quantity')
 
     def validate_quantity(self, value):
+        """
+        Validate that the quantity is greater than or equal to 0.
+        """
         if value < 0:
             raise serializers.ValidationError("Quantity must be greater than or equal to 0.")
         return value
 
     def update(self, instance, validated_data):
+        """
+        Update the quantity of the CartItem or delete it if quantity is zero.
+        """
         quantity = validated_data.get('quantity')
 
         if not quantity:

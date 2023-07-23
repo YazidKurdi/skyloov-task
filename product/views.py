@@ -1,7 +1,7 @@
 from drf_yasg.utils import swagger_auto_schema
+from django_filters import rest_framework as filters
 from rest_framework import generics
 from rest_framework.filters import OrderingFilter, SearchFilter
-from django_filters import rest_framework as filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -12,20 +12,31 @@ from .serializers import ProductSerializer
 
 
 class ProductListCreate(generics.ListCreateAPIView):
+    """
+    API view for listing and creating products.
+    """
 
     authentication_classes = [JWTAuthentication]
     permission_classes = []
 
+    # Queryset and serializer
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    # Filtering, ordering and search
     filter_backends = (filters.DjangoFilterBackend, SearchFilter, OrderingFilter)
     filterset_class = ProductFilter
     ordering_fields = ['rating']
     search_fields = ['description']
+
+    # Pagination
     pagination_class = SearchPagination
 
     def get_permissions(self):
-        # Check if the request method is POST, and apply IsAuthenticated permission only for POST requests
+        """
+        Return the list of permissions that should be applied to the view.
+        Only applies IsAuthenticated permission for POST requests.
+        """
         if self.request.method == 'POST':
             return [IsAuthenticated()]
         else:
@@ -41,7 +52,7 @@ class ProductListCreate(generics.ListCreateAPIView):
     )
     def get(self, request, *args, **kwargs):
         """
-        Get a list of products
+        Get a list of products.
         """
         return super().get(request, *args, **kwargs)
 
@@ -56,6 +67,6 @@ class ProductListCreate(generics.ListCreateAPIView):
     )
     def post(self, request, *args, **kwargs):
         """
-        Create a new product
+        Create a new product.
         """
         return super().post(request, *args, **kwargs)

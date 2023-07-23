@@ -1,6 +1,5 @@
 import os
 import threading
-from time import sleep
 
 from PIL import Image
 from django.db import models
@@ -38,6 +37,12 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
+        """
+        Save method overridden to handle additional tasks after saving a Product instance.
+
+        Using multi threading, this method saves the Product instance to the database and creates
+        two resized versions (thumbnail and medium) of the uploaded image, if an image is provided.
+        """
         super().save(*args, **kwargs)
         if self.image:
             thread = threading.Thread(target=self.create_image_dimensions)
@@ -50,20 +55,19 @@ class Product(models.Model):
         self.basename = os.path.basename(self.image.name)
 
         # Resize the image to desired dimensions
-        # You can modify these dimensions according to your requirements
         thumbnail_size = (100, 100)
         medium_size = (300, 300)
 
         # Create thumbnail
         img.thumbnail(thumbnail_size)
         thumbnail_path = self.get_thumbnail_path()
-        self.create_directory(os.path.dirname(thumbnail_path))  # Create the directory if it doesn't exist
+        self.create_directory(os.path.dirname(thumbnail_path))
         img.save(thumbnail_path)
 
         # Create medium-sized image
         img.thumbnail(medium_size)
         medium_path = self.get_medium_path()
-        self.create_directory(os.path.dirname(medium_path))  # Create the directory if it doesn't exist
+        self.create_directory(os.path.dirname(medium_path))
         img.save(medium_path)
 
     def create_directory(self, directory_path):
@@ -73,12 +77,10 @@ class Product(models.Model):
 
     def get_thumbnail_path(self):
         # Generate a unique filename for the thumbnail image
-        # You can modify this logic to suit your needs
         return f'media/product_images/thumbnails/{self.basename}'
 
     def get_medium_path(self):
         # Generate a unique filename for the medium-sized image
-        # You can modify this logic to suit your needs
         return f'media/product_images/medium/{self.basename}'
 
     def __str__(self):

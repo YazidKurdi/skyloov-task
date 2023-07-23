@@ -25,7 +25,7 @@ class UserSignupView(generics.CreateAPIView):
     )
     def post(self, request, *args, **kwargs):
         """
-        Create a new user
+        Create a new user with the provided data and send welcome email with activation link.
         """
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -45,6 +45,9 @@ class UserActivateView(APIView):
         tags=["Activate account"]
     )
     def get(self, request, uid, token):
+        """
+        Activate the user account using the provided UID and token.
+        """
         try:
             uid = force_text(urlsafe_base64_decode(uid))
             user = User.objects.get(pk=uid)
@@ -53,8 +56,6 @@ class UserActivateView(APIView):
                 user.save()
                 return Response({'message': 'Account activated'},status=status.HTTP_200_OK)
             else:
-                # You can add an error message here if needed
                 return Response({'error': 'Invalid activation link'}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
-            # You can add an error message here if needed
             return Response({'error': 'Invalid activation link'}, status=status.HTTP_400_BAD_REQUEST)
