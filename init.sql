@@ -1,0 +1,1 @@
+GRANT ALL PRIVILEGES ON *.* TO 'your_mysql_username'@'%';
